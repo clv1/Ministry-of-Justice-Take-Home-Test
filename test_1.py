@@ -14,10 +14,11 @@ def is_log_line(line):
 
     # -- check relevant elements are present
     try:
-        timestamp_date = line_data.pop(0)
-        timestamp_time = line_data.pop(0)
-        error_type = line_data.pop(0)
-        message = ' '.join(line_data)
+        # line_data[0:2]  # timestamp exists
+        # line_data[2]   # error_type exists
+        # line_data[3]   # message exists
+        for i in range(4):
+            line_data[i]
     except IndexError:
         return False
 
@@ -30,10 +31,23 @@ def is_log_line(line):
 # levels are `INFO`, `TRACE`, and `WARNING`. See lines 67 to 71 for how we expect the
 # results to look.
 def get_dict(line):
-    """Takes a log line and returns a dict with
+    """
+    Takes a log line and returns a dict with
     `timestamp`, `log_level`, `message` keys
     """
-    pass
+
+    # split line into a list
+    line_data = line.split()
+
+    # extract data
+    timestamp_date = line_data.pop(0)
+    timestamp_time = line_data.pop(0)
+    timestamp = ' '.join([timestamp_date, timestamp_time])
+    error_type = line_data.pop(0)
+    message = ' '.join(line_data)
+
+    # convert to dict
+    return {'timestamp': timestamp, 'log_level': error_type, 'message': message}
 
 
 # YOU DON'T NEED TO CHANGE ANYTHING BELOW THIS LINE
