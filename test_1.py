@@ -1,3 +1,5 @@
+"""Test 1"""
+
 # [TODO]: step 1
 # Update the is_log_line function below to skip lines that are not valid log lines.
 # Valid log lines have a timestamp, error type, and message. For example, lines 1, 3,
@@ -5,6 +7,8 @@
 # There's no perfect way to do this: just decide what you think is reasonable to get
 # the test to pass. The only thing you are not allowed to do is filter out log lines
 # based on the exact row numbers you want to remove.
+
+
 def is_log_line(line):
     """Takes a log line and returns True if it is a valid log line and returns nothing
     if it is not.
@@ -13,16 +17,18 @@ def is_log_line(line):
     line_data = line.split()
 
     # -- check relevant elements are present
-    try:
-        # line_data[0:2]  # timestamp exists
-        # line_data[2]   # error_type exists
-        # line_data[3]   # message exists
-        for i in range(4):
-            line_data[i]
-    except IndexError:
-        return False
-
+    for _ in range(4):
+        if len(line_data) < 4:
+            return False
     return True
+
+    # try:
+    #     # line_data[0:2]  # timestamp exists
+    #     # line_data[2]   # error_type exists
+    #     # line_data[3]   # message exists
+    # except IndexError:
+    #     return False
+    # return True
 
 
 # [TODO]: step 2
@@ -69,7 +75,7 @@ if __name__ == "__main__":
     # ---- OUTPUT --- #
     # You can print out each line of the log file line by line
     # by uncommenting this code below
-    # for i, line in enumerate(log_parser("sample.log")):
+    # for i, line in enumerate(log_parser_step_1("sample.log")):
     #     print(i, line)
 
     # ---- TESTS ---- #
