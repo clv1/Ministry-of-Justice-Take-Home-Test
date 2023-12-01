@@ -9,9 +9,18 @@ def is_log_line(line):
     """Takes a log line and returns True if it is a valid log line and returns nothing
     if it is not.
     """
-    # turn into pandas dataframe
-    # filter the dataframe
-    # write to a log file of the same name (replacing the original)
+    # -- Split line into a list
+    line_data = line.split()
+
+    # -- check relevant elements are present
+    try:
+        timestamp_date = line_data.pop(0)
+        timestamp_time = line_data.pop(0)
+        error_type = line_data.pop(0)
+        message = ' '.join(line_data)
+    except IndexError:
+        return False
+
     return True
 
 
