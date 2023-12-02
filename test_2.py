@@ -67,8 +67,83 @@
 # - home postcode
 # - nearest court of the right type
 # - the dx_number (if available) of the nearest court of the right type
-# - the distance to the nearest court of the right type
+# - the distance to the nearest court of the right type (provided in miles)
+
+import csv
+import json
+import pandas as pd
+import requests
+
+ENDPOINT_URL = 'https://www.find-court-tribunal.service.gov.uk/search/results.json'
+
+
+def load_people_data(csv_data: csv) -> list[dict]:
+    """Loads the csv data and returns it as a list of dictionaries."""
+    with open(csv_data, 'r', encoding='utf-8') as file:
+        people_df = pd.read_csv(file)
+    return people_df.to_dict(orient='records')
+
+
+def filter_courts_by_type(court_data: list[dict], desired_court_type: str) -> dict:
+    """
+    Takes in a list of courts, already ordered by distance.
+    Returns the first court of the desired type.
+    """
+    for court in court_data:
+        court_type = court.get('types')
+        if desired_court_type in court_type:
+            return court
+    return {'error': 'no court of desired type available.'}
+
+
+def retrieve_nearest_court_of_type(postcode: str, desired_court_type: str) -> dict:
+    """Uses the API to retrieve the nearest court from a person's postcode."""
+    postcode_query = f"?postcode={postcode}"
+
+    response = requests.get(ENDPOINT_URL+postcode_query, timeout=10)
+    court_data = response.json()
+
+    nearest_court_of_type = filter_courts_by_type(
+        court_data, desired_court_type)
+    return nearest_court_of_type
+
+
+def match_person_to_court(person: dict) -> dict:
+    """Returns a dict containing the details of each person and their nearest court."""
+    matched_details = {}
+
+    # person details
+    matched_details['name'] = person.get('person_name')
+    matched_details['desired_court_type'] = person.get(
+        'looking_for_court_type')
+    matched_details['home_postcode'] = person.get('home_postcode')
+
+    # court details
+    matched_court = retrieve_nearest_court_of_type(
+        person.get('home_postcode'),  person.get('looking_for_court_type'))
+    matched_details['nearest_court_of_type'] = matched_court
+    matched_details['court_dx_number'] = matched_court.get('dx_number')
+    matched_details['distance_to_court'] = f"{matched_court.get('distance')} miles"
+
+    return matched_details
+
+
+def match_people_to_courts(people_data: list[list]) -> list[dict]:
+    """
+    Matches a list of people to courts.
+    Returns the details of matches as a JSON array.
+    """
+    return [match_person_to_court(
+        person) for person in people_data]
+
+
+def generate_json_output(matches_list: list[dict]) -> json:
+    """Writes details of matches to file as a json object."""
+    with open('test_2_matched_output.json', 'w', encoding='utf-8') as file:
+        json.dump(matches_list, file, indent=4)
+
 
 if __name__ == "__main__":
-    # [TODO]: write your answer here
-    pass
+    people = load_people_data('people.csv')
+    matches = match_people_to_courts(people)
+    generate_json_output(matches)
