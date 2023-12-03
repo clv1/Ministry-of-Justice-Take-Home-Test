@@ -1,10 +1,28 @@
+"""Test 3"""
 # The below function doesn't work correctly. It should sum all the numbers at the
 # current time. For example, 01:02:03 should return 6. Improve and fix the function,
 # and write unit test(s) for it. Use any testing framework you're familiar with.
 
+HOURS = 24
+MINUTES = 60
+SECONDS = 60
 
-# [TODO]: fix the function
+
 def sum_current_time(time_str: str) -> int:
     """Expects data in the format HH:MM:SS"""
     list_of_nums = time_str.split(":")
-    return sum(list_of_nums)
+
+    try:
+        hour, minute, second = int(list_of_nums[0]), int(
+            list_of_nums[1]), int(list_of_nums[2])
+    except Exception as err:
+        raise TypeError("Time division data of invalid type.") from err
+
+    if hour not in range(HOURS) or minute not in range(MINUTES) or second not in range(SECONDS):
+        raise ValueError("Time division out of acceptable bounds.")
+
+    return hour + minute + second
+
+
+if __name__ == "__main__":
+    print(sum_current_time("21:31:01"))
