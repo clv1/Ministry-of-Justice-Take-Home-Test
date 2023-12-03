@@ -77,7 +77,7 @@ import requests
 ENDPOINT_URL = 'https://www.find-court-tribunal.service.gov.uk/search/results.json'
 
 
-class NetworkError(Exception):
+class NetworkError:
     "Class for network-related errors"
 
 
@@ -97,7 +97,7 @@ def filter_courts_by_type(court_data: list[dict], desired_court_type: str) -> di
         court_type = court.get('types')
         if desired_court_type in court_type:
             return court
-    return {'error': 'no court of desired type available.'}
+    return {'error': 'No court of desired type available.'}
 
 
 def retrieve_nearest_court_of_type(postcode: str, desired_court_type: str) -> dict:

@@ -29,15 +29,39 @@ These scripts do not need to be completed in order, but we do recommend you do.
 
 In each script is a comment block starting with `[TODO]`. This lays out what needs to be done to solve the test for that particular script. The remaining comments are there to explain the code and direct you.
 
-### Test 1
+## Test 1
 This asks you to extract and structure data from the file `sample.log`. You'll need to complete 2 short functions.
-
 When you think you have the answer, run `python test_1.py` and it will be automatically tested.
 
-### Test 2
-This asks you do get data from an API and match it with data from the file `people.csv`. 
+### Result
+`is_log_line` function:
+- Takes a log line (string) as input.
+- Splits each line into a list.
+- Checks that a timestamp, error type, and message are present.
+- Returns True if it is a valid log line and returns nothing if it is not.
 
+`get_dict` function:
+- Takes a log line (string as input).
+- Uses is_log_line to validate the timestamp, log_level and message.
+- Splits it into a list.
+- Extracts the timestamp, log_level and message.
+- Returns a dict containing the extracted data. Skips the line if invalid.
+
+## Test 2
+This asks you do get data from an API and match it with data from the file `people.csv`. 
 You're free to approach this however you like. We'll ask you to describe your approach and reasoning during the interview.
 
-### Test 3
+### Result
+The `test_2.py` script now loads data from the `people.csv` file. 
+It matches each person to the nearest court of their desired type (if such a court is available).
+It returns a list of person-court matches accessible in the `test_2_matched_output.json` file.
+
+## Test 3
 This asks you to fix a broken function and then write a unit test for it.
+
+### Result
+The `sum_current_time` function can now successfully return the desired sum.
+- It expects a string of data in the format HH:MM:SS as input.
+- The time divisions HH, MM, SS are extracted and validated.
+- Returns the sum of the time divisions.
+

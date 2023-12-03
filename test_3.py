@@ -9,7 +9,11 @@ SECONDS = 60
 
 
 def sum_current_time(time_str: str) -> int:
-    """Expects data in the format HH:MM:SS"""
+    """
+    Expects a string of data in the format HH:MM:SS as input.
+    The time divisions HH, MM, SS are extracted and validated.
+    Returns the sum of the time divisions.
+    """
     list_of_nums = time_str.split(":")
 
     try:

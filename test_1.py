@@ -7,28 +7,35 @@
 # the test to pass. The only thing you are not allowed to do is filter out log lines
 # based on the exact row numbers you want to remove.
 
+ERROR_TYPES = ['INFO', 'TRACE', 'WARNING']
+
 
 def is_log_line(line: str) -> bool | None:
-    """Takes a log line and returns True if it is a valid log line and returns nothing
+    """
+    Takes a log line (string) as input.
+    Splits each line into a list.
+    Checks that a timestamp, error type, and message are present.
+    Returns True if it is a valid log line and returns nothing
     if it is not.
     """
-    # -- Split line into a list
+
     line_data = line.split()
 
-    # -- check relevant elements are present
-    for _ in range(4):
-        if len(line_data) < 4:
-            return False
-    return True
+    try:
+        timestamp = " ".join(line_data[0:2])
+        error_type = line_data[2]
+        message = line_data[3]
+    except IndexError:
+        return None
 
-    # -- One of many alternative methods
-    # try:
-    #     # line_data[0:2]  # timestamp exists
-    #     # line_data[2]   # error_type exists
-    #     # line_data[3]   # message exists
-    # except IndexError:
-    #     return False
-    # return True
+    if len(timestamp) != 17:
+        return None
+    if error_type not in ERROR_TYPES:
+        return None
+    if not message:
+        return None
+
+    return True
 
 
 # Update the get_dict function below so it converts a line of the logs into a
@@ -37,21 +44,23 @@ def is_log_line(line: str) -> bool | None:
 # results to look.
 def get_dict(line):
     """
-    Takes a log line and returns a dict with
-    `timestamp`, `log_level`, `message` keys.
+    Takes a log line (string as input).
+    Uses is_log_line to validate the timestamp, log_level and message.
+    Splits it into a list.
+    Extracts the timestamp, log_level and message.
+    Returns a dict containing the extracted data. Skips the line if invalid.
     """
+    if is_log_line(line) != True:
+        return None
 
-    # split line into a list
     line_data = line.split()
 
-    # extract data
     timestamp_date = line_data.pop(0)
     timestamp_time = line_data.pop(0)
     timestamp = ' '.join([timestamp_date, timestamp_time])
     error_type = line_data.pop(0)
     message = ' '.join(line_data)
 
-    # convert to dict
     return {'timestamp': timestamp, 'log_level': error_type, 'message': message}
 
 
@@ -74,8 +83,8 @@ if __name__ == "__main__":
     # ---- OUTPUT --- #
     # You can print out each line of the log file line by line
     # by uncommenting this code below
-    # for i, line in enumerate(log_parser_step_1("sample.log")):
-    #     print(i, line)
+    for i, line in enumerate(log_parser_step_1("sample.log")):
+        print(i, line)
 
     # ---- TESTS ---- #
     # DO NOT CHANGE
