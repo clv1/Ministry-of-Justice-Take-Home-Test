@@ -77,6 +77,10 @@ import requests
 ENDPOINT_URL = 'https://www.find-court-tribunal.service.gov.uk/search/results.json'
 
 
+class NetworkError(Exception):
+    "Class for network-related errors"
+
+
 def load_people_data(csv_data: csv) -> list[dict]:
     """Loads the csv data and returns it as a list of dictionaries."""
     with open(csv_data, 'r', encoding='utf-8') as file:
@@ -102,6 +106,12 @@ def retrieve_nearest_court_of_type(postcode: str, desired_court_type: str) -> di
 
     response = requests.get(ENDPOINT_URL+postcode_query, timeout=10)
     court_data = response.json()
+
+    if response.status_code >= 500:
+        raise NetworkError("Server error.")
+    if response.status_code >= 400:
+        raise NetworkError(
+            "Court data not found.")
 
     nearest_court_of_type = filter_courts_by_type(
         court_data, desired_court_type)

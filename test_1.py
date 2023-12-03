@@ -1,6 +1,5 @@
 """Test 1"""
 
-# [TODO]: step 1
 # Update the is_log_line function below to skip lines that are not valid log lines.
 # Valid log lines have a timestamp, error type, and message. For example, lines 1, 3,
 # 7 and 37 are all examples of lines (from sample.log) that would be filtered out.
@@ -9,7 +8,7 @@
 # based on the exact row numbers you want to remove.
 
 
-def is_log_line(line):
+def is_log_line(line: str) -> bool | None:
     """Takes a log line and returns True if it is a valid log line and returns nothing
     if it is not.
     """
@@ -22,6 +21,7 @@ def is_log_line(line):
             return False
     return True
 
+    # -- One of many alternative methods
     # try:
     #     # line_data[0:2]  # timestamp exists
     #     # line_data[2]   # error_type exists
@@ -31,7 +31,6 @@ def is_log_line(line):
     # return True
 
 
-# [TODO]: step 2
 # Update the get_dict function below so it converts a line of the logs into a
 # dictionary with keys for "timestamp", "log_level", and "message". The valid log
 # levels are `INFO`, `TRACE`, and `WARNING`. See lines 67 to 71 for how we expect the
@@ -39,7 +38,7 @@ def is_log_line(line):
 def get_dict(line):
     """
     Takes a log line and returns a dict with
-    `timestamp`, `log_level`, `message` keys
+    `timestamp`, `log_level`, `message` keys.
     """
 
     # split line into a list
